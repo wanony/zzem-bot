@@ -322,6 +322,12 @@ class Fun(commands.Cog):
                         continue
                     else:
                         if str(currentlink[0]) not in gfys_dict["tags"][link]:
+                            author = str(ctx.author.id)
+                            if author not in contri_dict:
+                                print(f"Added {author} to Contributers")
+                                contri_dict[author] = {}
+                                contri_dict[author]['cont'] = 0
+                            contri_dict[author]['cont'] += 1
                             gfys_dict["tags"][link].append(str(currentlink[0]))
                             await ctx.send(f"Added to the `{link}` tag!")
                             continue
@@ -416,6 +422,12 @@ class Fun(commands.Cog):
                             await ctx.send(f"Already added to `{link}` tag!")
                             continue
                 if str(link) not in gfys_dict["groups"][group][idol]:
+                    author = str(ctx.author.id)
+                    if author not in contri_dict:
+                        print(f"Added {author} to Contributers")
+                        contri_dict[author] = {}
+                        contri_dict[author]['cont'] = 0
+                    contri_dict[author]['cont'] += 1
                     gfys_dict["groups"][group][idol].append(str(link))
                     await ctx.send(f"Added to `{group}`'s `{idol.title()}`!")
                 else:
