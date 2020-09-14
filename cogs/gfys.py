@@ -554,7 +554,7 @@ class Fun(commands.Cog):
                 for elem in gfys_dict["groups"][grp][idl]:
                     valid_links = (
                         "https://gfycat.com/",
-                        "https://www.redgifs.com/"
+                        "https://www.redgifs.com/",
                         "https://www.gifdeliverynetwork.com/"
                     )
                     try:
@@ -652,10 +652,10 @@ class Fun(commands.Cog):
         for tag in tags_list:
             valid_links = (
                 "https://gfycat.com/",
-                "https://www.redgifs.com/"
-                "https://www.gifdeliverynetwork.com/"
-                "https://pbs.twimg.com/media/"
-                "https://youtu"
+                "https://www.redgifs.com/",
+                "https://www.gifdeliverynetwork.com/",
+                "https://pbs.twimg.com/media/",
+                "https://youtu",
                 "https://www.youtu"
             )
             valid_fts = (".JPG", ".jpg", ".JPEG", ".jpeg", ".PNG", ".png")
