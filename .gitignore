@@ -1,0 +1,7 @@
+.vscode/
+backupgfys/
+cogs/__pycache__/
+jsons/
+cogs/directories.json
+directories.json
+test.py
