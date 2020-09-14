@@ -25,7 +25,7 @@ class General(commands.Cog):
         """Gets all cogs and commands of mine."""
         if not cog:
             titl = 'Category List'
-            desc = ('Use `.help <Category> to find out more about them! \n'
+            desc = ('Use `.help <Category>` to find out more about them! \n'
                     '(BTW, the Category Name Must Be in Title Case, Just '
                     'Like this Sentence.')
             halp = discord.Embed(title=titl,

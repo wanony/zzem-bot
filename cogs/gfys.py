@@ -64,7 +64,6 @@ class Fun(commands.Cog):
             tag = tag.lower()
             if link in gfys_dict["tags"][tag]:
                 gfys_dict["tags"][tag].remove(link)
-                print(gfys_dict["tags"][tag])
                 await ctx.send(f"Removed `{tag}` from the link!")
             else:
                 await ctx.send(f"Gfy doesn't have `{tag}`!")
@@ -77,17 +76,13 @@ class Fun(commands.Cog):
         All links with this tag, will no longer have this tag
         """
         tag = tag.lower()
-        print(tag)
         if tag in gfys_dict["tags"]:
-            print("found tag in json")
             if tag in gfys_dict["grave"]:
-                print("copying tag into the graveyard")
                 tag = tag + "(copy)"
             grave = gfys_dict["grave"]
             updater = {tag: gfys_dict["tags"][tag]}
             grave.update(updater)
             del gfys_dict["tags"][tag]
-            print("deleted the tag")
             await ctx.send(f"Deleted tag: `{tag}`.")
         else:
             await ctx.send(f"No tag: `{tag}`.")
@@ -226,12 +221,9 @@ class Fun(commands.Cog):
         else:
             tags = None
         if grp in gfys_dict["groups"]:
-            print("group exist")
             if idl in gfys_dict["groups"][grp]:
-                print("idol in group")
                 fts = (".JPG", ".jpg", ".JPEG", ".jpeg", ".PNG", ".png")
                 if tags:
-                    print("there is tags")
                     tagged_list = []
                     for tag in tags:
                         if tag in gfys_dict["tags"]:
@@ -249,7 +241,6 @@ class Fun(commands.Cog):
                             await ctx.send(
                                     f"Nothing tagged {tag} for {idl}")
                 else:
-                    print("no tags")
                     c_s = []
                     for element in gfys_dict["groups"][grp][idl]:
                         if element.endswith(fts):
@@ -259,11 +250,9 @@ class Fun(commands.Cog):
                     if grp not in recent_dict:
                         updater = {grp: {}}
                         recent_dict.update(updater)
-                        print("added group to recent_dict")
                     if idl not in recent_dict[grp]:
                         updater = {idl: []}
                         recent_dict[grp].update(updater)
-                        print("added idol to recent_dict")
                     refine = [x for x in c_s if x not in recent_dict[grp][idl]]
                     if len(refine) <= 1:
                         print(f"resetting {grp}: {idl} list.")
@@ -303,25 +292,19 @@ class Fun(commands.Cog):
                         print("no pop")
                     currentlink.append(link)
                 elif "twimg" in link:
-                    print("twitter link")
                     try:
                         currentlink.pop()
                     except IndexError:
                         print("no pop")
                     split_link = link.split("/")
                     if "?" in split_link[-1]:
-                        print("has a ?")
                         splitt = split_link[-1].split("?")
-                        print(splitt)
                         if "png" in splitt[-1]:
                             newending = splitt[0] + "?format=png&name=orig"
                         else:
                             newending = splitt[0] + "?format=jpg&name=orig"
-                        print(newending)
                         link = "https://pbs.twimg.com/media/" + str(newending)
-                        print(link)
                     elif "." in split_link[-1]:
-                        print("has a .")
                         splitt = split_link[-1].split(".")
                         if "png" in splitt[-1]:
                             newending = splitt[0] + "?format=png&name=orig"
@@ -331,23 +314,18 @@ class Fun(commands.Cog):
                     currentlink.append(link)
                 else:
                     link = link.lower()
-                    print(f"tag found {link}")
                     if link not in gfys_dict["tags"]:
-                        print(f"tag not found {link}")
                         updater = {str(link): []}
                         gfys_dict["tags"].update(updater)
                         gfys_dict["tags"][link].append(str(currentlink[0]))
                         await ctx.send(f"Added image to `{link}` tag!")
                         continue
                     else:
-                        print("is in tags")
-                        print(currentlink)
                         if str(currentlink[0]) not in gfys_dict["tags"][link]:
                             gfys_dict["tags"][link].append(str(currentlink[0]))
                             await ctx.send(f"Added to the `{link}` tag!")
                             continue
                         else:
-                            print("already in tag list")
                             await ctx.send(f"Already added to `{link}` tag!")
                             continue
                 if str(link) not in gfys_dict["groups"][group][idol]:
@@ -373,11 +351,8 @@ class Fun(commands.Cog):
         else:
             tags = None
         if group in gfys_dict["groups"]:
-            print("group exist")
             if idol in gfys_dict["groups"][group]:
-                print("idol in group")
                 if tags:
-                    print("there is tags")
                     tagged_list = []
                     for tag in tags:
                         if tag in gfys_dict["tags"]:
@@ -393,12 +368,9 @@ class Fun(commands.Cog):
                             await ctx.send(
                                     f"Nothing tagged {tag} for {idol}")
                 else:
-                    print("no tags")
                     can_send = []
                     for fancam in gfys_dict["groups"][group][idol]:
-                        print(fancam)
                         if fancam.startswith("https://www.youtu"):
-                            print(fancam)
                             can_send.append(fancam)
                     await ctx.send(random.choice(can_send))
             else:
@@ -429,23 +401,18 @@ class Fun(commands.Cog):
                     currentlink.append(link)
                 else:
                     link = link.lower()
-                    print(f"tag found {link}")
                     if link not in gfys_dict["tags"]:
-                        print(f"tag not found {link}")
                         updater = {str(link): []}
                         gfys_dict["tags"].update(updater)
                         gfys_dict["tags"][link].append(str(currentlink[0]))
                         await ctx.send(f"Added fancam to `{link}` tag!")
                         continue
                     else:
-                        print("is in tags")
-                        print(currentlink)
                         if str(currentlink[0]) not in gfys_dict["tags"][link]:
                             gfys_dict["tags"][link].append(str(currentlink[0]))
                             await ctx.send(f"Added to the `{link}` tag!")
                             continue
                         else:
-                            print("already in tag list")
                             await ctx.send(f"Already added to `{link}` tag!")
                             continue
                 if str(link) not in gfys_dict["groups"][group][idol]:
@@ -476,7 +443,6 @@ class Fun(commands.Cog):
             dt = 0
             it = 0
             for gfy in links:
-                print(f"gfy is {gfy}")
                 if gfy.startswith("https://gfycat.com/"):
                     split = gfy.split("/")
                     gfy = "https://gfycat.com/" + split[-1]
@@ -502,10 +468,8 @@ class Fun(commands.Cog):
                         print("nothing to pop")
                     currentlink.append(gfy)
                 else:
-                    print(f"tag found {gfy}")
                     gfy = gfy.lower()
                     if gfy not in gfys_dict["tags"]:
-                        print(f"tag not found {gfy}")
                         updater = {str(gfy): []}
                         gfys_dict["tags"].update(updater)
                         gfys_dict["tags"][gfy].append(str(currentlink[0]))
@@ -516,8 +480,6 @@ class Fun(commands.Cog):
                             send_message[gfy] += 1
                         continue
                     else:
-                        print("is in tags")
-                        print(currentlink)
                         if str(currentlink[0]) not in gfys_dict["tags"][gfy]:
                             gfys_dict["tags"][gfy].append(str(currentlink[0]))
                             it += 1
@@ -528,7 +490,6 @@ class Fun(commands.Cog):
                             continue
                         else:
                             dt += 1
-                            print("already in tag list")
                             continue
                 if str(gfy) not in gfys_dict["groups"][group][idol]:
                     gfys_dict["groups"][group][idol].append(str(gfy))
@@ -606,11 +567,9 @@ class Fun(commands.Cog):
                 if grp not in recent_dict:
                     updater = {grp: {}}
                     recent_dict.update(updater)
-                    print("added group to recent_dict")
                 if idl not in recent_dict[grp]:
                     updater = {idl: []}
                     recent_dict[grp].update(updater)
-                    print("added idol to recent_dict")
                 refine = [x for x in r_s if x not in recent_dict[grp][idl]]
                 if len(refine) <= 1:
                     print(f"resetting {grp}: {idl} list.")
@@ -630,30 +589,23 @@ class Fun(commands.Cog):
     @commands.command(aliases=['r'])
     async def random(self, ctx):
         """Returns a random link, luck of the draw!"""
-        print("called random")
         with open(direc_dict["gfys"], 'r') as gfys:
             gfys_dict = json.load(gfys)
 
         async def random_recur():
             grp = random.choice(list(gfys_dict["groups"].keys()))
-            print(grp)
             idl = random.choice(list(gfys_dict["groups"][grp].keys()))
-            print(idl)
             try:
                 fi = random.choice(gfys_dict["groups"][grp][idl])
             except IndexError:
-                print("List is empty")
                 await random_recur()
             if grp not in recent_dict:
                 updater = {grp: {}}
                 recent_dict.update(updater)
-                print("added group to recent_dict")
             if idl not in recent_dict[grp]:
                 updater = {idl: []}
                 recent_dict[grp].update(updater)
-                print("added idol to recent_dict")
             if fi in recent_dict[grp][idl]:
-                print("random choice in recent dict")
                 relen = len(recent_dict[grp][idl])
                 gflen = len(gfys_dict["groups"][grp][idl])
                 if relen == gflen:
@@ -708,9 +660,7 @@ class Fun(commands.Cog):
                     print("nothing to pop")
                 currentlink.append(tag)
             else:
-                print(f"tag found {tag}")
                 tag = tag.lower()
-                print(tag)
                 if tag not in gfys_dict["tags"]:
                     updater = {str(tag).lower(): []}
                     gfys_dict["tags"].update(updater)
@@ -895,10 +845,8 @@ class Fun(commands.Cog):
         """
         await self.disclient.wait_until_ready()
         if group not in gfys_dict["groups"]:
-            print("no group")
             await ctx.send(f"Nothing for {group}")
         elif idol not in gfys_dict["groups"][group]:
-            print("no idol in group")
             await ctx.send(f"Nothing for {idol} in {group}")
         else:
             interval = int(interval)
@@ -911,12 +859,10 @@ class Fun(commands.Cog):
             author = str(ctx.author)
             checklist = []
             for keys in self.loops:
-                print(keys)
                 if keys.startswith(author):
                     checklist.append(keys)
             if len(checklist) >= 1:
                 checklist.sort()
-                print(checklist)
                 author = checklist[-1] + "_"
             t = len(str(author)) - len(str(ctx.author)) + 1
             await ctx.send(f"This is timer number `{t}` for `{ctx.author}`.")
@@ -944,12 +890,10 @@ class Fun(commands.Cog):
                 checklist.append(keys)
         #  doesn't work at "all"
         if str(timer_number) == 'all':
-            print("ending all")
             i = 0
             for element in checklist:
                 self.loops[element] = 0
                 del self.loops[element]
-                print(f"deleted {element}")
                 i += 1
             await ctx.send("Stopped all {i} timers for `{author}`")
         elif len(checklist) == 1:
@@ -966,8 +910,7 @@ class Fun(commands.Cog):
             await ctx.send(
                     f"Stopped timer `{timer_number}` for `{ctx.author}`.")
             del self.loops[author]
-            print("deleted {author} from loops")
-            print(self.loops)
+            print(f"deleted {author} from loops")
         else:
             await ctx.send(f"No timers running for `{ctx.author}`.")
 
@@ -989,24 +932,19 @@ class Fun(commands.Cog):
             idol = idol.lower()
             group = group.lower()
             if group not in gfys_dict["groups"]:
-                print(f"no group called {group}!")
                 await ctx.send(f"No group called {group}!")
             if idol in dicto[group]:
                 idol_list = dicto[group][idol]
                 is_tagged = []
                 for tags in gfys_dict["tags"]:
-                    print(tags)
                     i = 0
-                    print(f"i: {i}")
                     for element in gfys_dict["tags"][tags]:
                         if element in idol_list:
                             i += 1
                     if i > 0:
                         is_tagged.append(f"{tags}: {i}")
                 if len(is_tagged) > 0:
-                    print(is_tagged)
                     is_tagged.sort()
-                    print(is_tagged)
                     a = idol.title()
                     b = str(len(idol_list))
                     c = format_list(is_tagged)
