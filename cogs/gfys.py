@@ -868,7 +868,6 @@ class Fun(commands.Cog):
             await ctx.send(f"This is timer number `{t}` for `{ctx.author}`.")
             loop_and_author = {author: loops}
             self.loops.update(loop_and_author)
-            print(f"self.loops: {self.loops}")
             while self.loops[author] > 0:
                 await self.gfy(ctx, group, idol, *tags)
                 self.loops[author] -= 1
