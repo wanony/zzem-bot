@@ -21,10 +21,10 @@ class Events(commands.Cog):
             return
         # user = message.author
         msg = message.content.split(" ")
-        if msg[0].startswith("%"):
+        if msg[0].startswith("."):
             with open(direc_dict["custom"], 'r') as cus:
                 custom_dict = json.load(cus)
-            command = msg[0].replace("%", "")
+            command = msg[0].replace(".", "")
             print(command)
             if command in custom_dict["command_list"]:
                 await message.channel.send(custom_dict["commands"][command])
