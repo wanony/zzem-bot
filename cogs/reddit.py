@@ -82,7 +82,6 @@ class Reddits(commands.Cog):
                 await ctx.send(f"{subreddit} is not followed in this channel")
         else:
             await ctx.send("No subreddits are followed in this channel")
-        pass
 
     @commands.command()
     async def follow_subreddit(self, ctx, subreddit):
