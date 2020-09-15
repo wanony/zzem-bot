@@ -23,7 +23,6 @@ class Reddits(commands.Cog):
         self.disclient = disclient
         self.disclient.loop.create_task(self.post_new())
         self.disclient.loop.create_task(self.write_reddit())
-        self.last_submissions = {}
 
     @commands.Cog.listener()
     async def write_reddit(self):
@@ -40,6 +39,7 @@ class Reddits(commands.Cog):
 
             async def post_to_server(channel, subreddit):
                 channel = self.disclient.get_channel(int(channel))
+                chanid = str(channel.id)
                 sub = reddit.subreddit(subreddit).new(limit=1)
                 for subm in sub:
                     title = subm.title
@@ -49,11 +49,14 @@ class Reddits(commands.Cog):
                         url = subm.url
                     auth = subm.author
                     perm = subm.permalink
-                    if channel not in self.last_submissions:
-                        updater = {channel: []}
-                        self.last_submissions.update(updater)
-                    if perm not in self.last_submissions[channel]:
-                        self.last_submissions[channel].append(perm)
+                    if reddit_dict[chanid][subreddit]["last_post"] == perm:
+                        # updater = {"last_sub": perm}
+                        # reddit_dict[chanid].update(updater)
+                        pass
+                    else:  # if reddit_dict[chanid]["last_sub"] == perm:
+                        print(reddit_dict[chanid][subreddit]["last_post"])
+                        reddit_dict[chanid][subreddit]["last_post"] = perm
+                        print(reddit_dict[chanid][subreddit]["last_post"])
                         s = (f"`{auth}` posted `{title}` in **{subreddit}**!"
                              f" {url} \n"
                              f"<https://reddit.com{perm}>")
@@ -72,9 +75,11 @@ class Reddits(commands.Cog):
         """Unfollow a previously followed subreddit"""
         channel = str(ctx.channel.id)
         subreddit = subreddit.lower()
-        if str(channel) in reddit_dict:
+        if channel in reddit_dict:
+            print("channel in dict")
             if subreddit in reddit_dict[channel]:
-                reddit_dict[channel].remove(str(subreddit))
+                print("sub in channel")
+                del reddit_dict[channel][subreddit]
                 if not reddit_dict[channel]:
                     del reddit_dict[channel]
                 await ctx.send(f"Unfollowed {subreddit} in this channel!")
@@ -88,13 +93,14 @@ class Reddits(commands.Cog):
         """Add a subreddit to follow in this server!
         The channel this command is invoked in will be used
         to post the new submission to the sub"""
-        channel = ctx.channel.id
+        channel = str(ctx.channel.id)
         subreddit = subreddit.lower()
         if channel in reddit_dict:
-            reddit_dict[channel].append(str(subreddit))
+            updater = {subreddit: {"last_post": ""}}
+            reddit_dict[channel].update(updater)
             await ctx.send(f"Added {subreddit} to this channel!")
         else:
-            updater = {channel: [subreddit]}
+            updater = {channel: {subreddit: {"last_post": ""}}}
             reddit_dict.update(updater)
             await ctx.send(f"Added {subreddit} to this channel!")
 
