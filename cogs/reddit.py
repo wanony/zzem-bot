@@ -1,4 +1,4 @@
-# import discord
+import discord
 import json
 import praw
 from discord.ext import commands
@@ -42,28 +42,65 @@ class Reddits(commands.Cog):
                 chanid = str(channel.id)
                 sub = reddit.subreddit(subreddit).new(limit=1)
                 for subm in sub:
-                    title = subm.title
+                    titl = subm.title
                     if "/r/" in subm.url:
                         url = ""
                     else:
                         url = subm.url
                     auth = subm.author
                     perm = subm.permalink
+                    fts = (".JPG", ".jpg", ".JPEG", ".jpeg", ".PNG", ".png")
+                    gifs = (
+                        "https://gfycat.com/",
+                        "https://www.redgifs.com/",
+                        "https://www.gifdeliverynetwork.com/"
+                    )
                     if reddit_dict[chanid][subreddit]["last_post"] == perm:
-                        # updater = {"last_sub": perm}
-                        # reddit_dict[chanid].update(updater)
                         pass
-                    else:  # if reddit_dict[chanid]["last_sub"] == perm:
-                        print(reddit_dict[chanid][subreddit]["last_post"])
+                    else:
+                        soy = "https://reddit.com"
                         reddit_dict[chanid][subreddit]["last_post"] = perm
-                        print(reddit_dict[chanid][subreddit]["last_post"])
-                        s = (f"`{auth}` posted `{title}` in **{subreddit}**!"
-                             f" {url} \n"
-                             f"<https://reddit.com{perm}>")
-                        try:
-                            await channel.send(s)
-                        except AttributeError:
-                            print("NoneType Error, check if channel deleted")
+                        desc = f"Posted by {auth} in **/r/{subreddit}**"
+                        embed = discord.Embed(title=titl,
+                                              description=desc,
+                                              color=discord.Color.blurple())
+                        if url:
+                            val = f"{soy}{perm} \n**{url}**"
+                            if url.endswith(fts):
+                                embed.set_image(url=url)
+                                # val = f"{soy}{perm} \n**{url}**"
+                                embed.add_field(name="Post Permalink",
+                                                value=val)
+                                try:
+                                    await channel.send(embed=embed)
+                                except AttributeError:
+                                    print("Channel deleted")
+                            elif url.startswith(gifs):
+                                # val = f"{soy}{perm} \n**{url}**"
+                                embed.add_field(name="Post Permalink",
+                                                value=val)
+                                try:
+                                    await channel.send(embed=embed)
+                                    await channel.send(url)
+                                except AttributeError:
+                                    print("Channel deleted")
+                            else:
+                                val = f"{soy}{perm}"
+                                embed.add_field(name="Post Permalink",
+                                                value=val)
+                                try:
+                                    await channel.send(embed=embed)
+                                    await channel.send(url)
+                                except AttributeError:
+                                    print("Channel deleted")
+                        else:
+                            val = f"{soy}{perm}"
+                            embed.add_field(name="Post Permalink",
+                                            value=val)
+                            try:
+                                await channel.send(embed=embed)
+                            except AttributeError:
+                                print("Channel deleted")
 
             for channel in reddit_dict:
                 for subs in reddit_dict[channel]:

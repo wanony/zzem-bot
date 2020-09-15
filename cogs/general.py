@@ -22,7 +22,9 @@ class General(commands.Cog):
     @commands.command(pass_context=True)
     @commands.has_permissions(add_reactions=True, embed_links=True)
     async def help(self, ctx, *cog):
-        """Gets all cogs and commands of mine."""
+        """Gets all categories and commands of the bot."""
+        # cogs can just be .lower() and cog.title()
+        # accepting commands can also be done
         if not cog:
             titl = 'Category List'
             desc = ('Use `.help <Category>` to find out more about them! \n'
@@ -50,6 +52,7 @@ class General(commands.Cog):
             await ctx.message.add_reaction(emoji='✉')
             await ctx.message.author.send(embed=halp)
         else:
+            # can allow for multiple cogs
             if len(cog) > 1:
                 halp = discord.Embed(title='Error!',
                                      description='Too many cogs!',
@@ -58,6 +61,9 @@ class General(commands.Cog):
             else:
                 found = False
                 for x in self.disclient.cogs:
+                    # why is this a loop in a loop?
+                    # need to rewrite here to allow for information on
+                    # just commands and to not use shitty loops
                     for y in cog:
                         if x == y:
                             titl = f"{cog[0]} Command List"
