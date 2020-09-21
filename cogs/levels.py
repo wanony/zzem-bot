@@ -94,7 +94,7 @@ class Levels(commands.Cog):
             cont = uz[member]["cont"]
             thing = {cont: str(memberid)}
             listo.update(thing)
-        p = {key: value for key, value in sorted(thing.items(),
+        p = {key: value for key, value in sorted(listo.items(),
                                                  key=lambda item: item[1])}
         embed = discord.Embed(title="Contribution Leaderboard",
                               description="",
