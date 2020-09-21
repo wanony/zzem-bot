@@ -88,33 +88,21 @@ class Levels(commands.Cog):
         """
         with open(direc_dict["contri"]) as cont:
             uz = json.load(cont)
-        listo = []
+        listo = {}
         for member in uz:
             memberid = await self.disclient.fetch_user(member)
             cont = uz[member]["cont"]
-            thing = f"{str(cont)} {str(memberid)}"
-            listo.append(thing)
-        listo.sort(reverse=True)
-        print(listo)
-        spacing = " "
-        cum = [f"Users:{spacing*15} Contributions: \n"]
-        i = 1
-        for elem in listo:
-            elem = elem.split(" ")
-            name = f"{elem[-1]} {spacing*(30 - len(elem[-1]))}"
-            fs = f"{i}. {name} {elem[0]} \n"
-            cum.append(fs)
-            i += 1
-        # await ctx.send(f"```{format_list(cum[:10])}```")
+            thing = {cont: str(memberid)}
+            listo.update(thing)
+        p = {key: value for key, value in sorted(thing.items(),
+                                                 key=lambda item: item[1])}
         embed = discord.Embed(title="Contribution Leaderboard",
                               description="",
                               color=discord.Color.blurple())
-        # for elem in cum[1:10]:
-        #     print(elem)
-        #     embed.add_field(name="yes", value="cock", inline=True)
         e = 1
-        for elem in listo:
-            print(elem)
+        spacing = " "
+        for elem in p:
+            elem = f"{elem} {p[elem]}"
             elem = elem.split(" ")
             elem = f"{elem[-1]}{spacing*(29 - len(elem[-1]))}{elem[0]}"
             embed.add_field(name="-", value=f"`{e}. {elem}`", inline=False)
