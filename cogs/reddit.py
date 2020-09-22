@@ -40,7 +40,7 @@ class Reddits(commands.Cog):
             async def post_to_server(channel, subreddit):
                 channel = self.disclient.get_channel(int(channel))
                 chanid = str(channel.id)
-                sub = reddit.subreddit(subreddit).new(limit=1)
+                sub = reddit.subreddit(subreddit).new(limit=3)
                 for subm in sub:
                     titl = subm.title
                     if "/r/" in subm.url:
@@ -55,20 +55,22 @@ class Reddits(commands.Cog):
                         "https://www.redgifs.com/",
                         "https://www.gifdeliverynetwork.com/"
                     )
-                    if reddit_dict[chanid][subreddit]["last_post"] == perm:
+                    lp = reddit_dict[chanid][subreddit]["last_post"]
+                    if perm in lp:
                         pass
                     else:
                         soy = "https://reddit.com"
-                        reddit_dict[chanid][subreddit]["last_post"] = perm
+                        lp.append(perm)
+                        if len(lp) > 5:
+                            del lp[0]
                         desc = f"Posted by {auth} in **/r/{subreddit}**"
                         embed = discord.Embed(title=titl,
                                               description=desc,
                                               color=discord.Color.blurple())
                         if url:
                             val = f"{soy}{perm} \n**{url}**"
-                            if url.endswith(fts):
+                            if url.endswith(fts) or "gallery" in url:
                                 embed.set_image(url=url)
-                                # val = f"{soy}{perm} \n**{url}**"
                                 embed.add_field(name="Post Permalink",
                                                 value=val)
                                 try:
@@ -76,7 +78,6 @@ class Reddits(commands.Cog):
                                 except AttributeError:
                                     print("Channel deleted")
                             elif url.startswith(gifs):
-                                # val = f"{soy}{perm} \n**{url}**"
                                 embed.add_field(name="Post Permalink",
                                                 value=val)
                                 try:
@@ -101,6 +102,7 @@ class Reddits(commands.Cog):
                                 await channel.send(embed=embed)
                             except AttributeError:
                                 print("Channel deleted")
+                await asyncio.sleep(60)
 
             for channel in reddit_dict:
                 for subs in reddit_dict[channel]:
@@ -113,17 +115,27 @@ class Reddits(commands.Cog):
         channel = str(ctx.channel.id)
         subreddit = subreddit.lower()
         if channel in reddit_dict:
-            print("channel in dict")
             if subreddit in reddit_dict[channel]:
-                print("sub in channel")
                 del reddit_dict[channel][subreddit]
                 if not reddit_dict[channel]:
                     del reddit_dict[channel]
-                await ctx.send(f"Unfollowed {subreddit} in this channel!")
+                msg = f"Unfollowed {subreddit} in this channel!"
+                embed = discord.Embed(title="Success",
+                                      description=msg,
+                                      color=discord.Color.green())
+                await ctx.send(embed=embed)
             else:
-                await ctx.send(f"{subreddit} is not followed in this channel")
+                msg = f"{subreddit} is not followed in this channel"
+                embed = discord.Embed(title="Error",
+                                      description=msg,
+                                      color=discord.Color.red())
+                await ctx.send(embed=embed)
         else:
-            await ctx.send("No subreddits are followed in this channel")
+            msg = "No subreddits are followed in this channel"
+            embed = discord.Embed(title="Error",
+                                  description=msg,
+                                  color=discord.Color.red())
+            await ctx.send(embed=embed)
 
     @commands.command()
     async def follow_subreddit(self, ctx, subreddit):
@@ -133,13 +145,28 @@ class Reddits(commands.Cog):
         channel = str(ctx.channel.id)
         subreddit = subreddit.lower()
         if channel in reddit_dict:
-            updater = {subreddit: {"last_post": ""}}
-            reddit_dict[channel].update(updater)
-            await ctx.send(f"Added {subreddit} to this channel!")
+            if subreddit in reddit_dict[channel]:
+                msg = f"Already added {subreddit} to this channel!"
+                embed = discord.Embed(title="Error",
+                                      description=msg,
+                                      color=discord.Color.red())
+                await ctx.send(embed=embed)
+            else:
+                updater = {subreddit: {"last_post": []}}
+                reddit_dict[channel].update(updater)
+                msg = f"Added {subreddit} to this channel!"
+                embed = discord.Embed(title="Success",
+                                      description=msg,
+                                      color=discord.Color.green())
+                await ctx.send(embed=embed)
         else:
-            updater = {channel: {subreddit: {"last_post": ""}}}
+            updater = {channel: {subreddit: {"last_post": []}}}
             reddit_dict.update(updater)
-            await ctx.send(f"Added {subreddit} to this channel!")
+            msg = f"Added {subreddit} to this channel!"
+            embed = discord.Embed(title="Success",
+                                  description=msg,
+                                  color=discord.Color.green())
+            await ctx.send(embed=embed)
 
 
 def setup(disclient):
