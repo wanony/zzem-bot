@@ -29,7 +29,7 @@ class General(commands.Cog):
             titl = 'Category List'
             desc = ('Use `.help <Category>` to find out more about them! \n'
                     '(BTW, the Category Name Must Be in Title Case, Just '
-                    'Like this Sentence.')
+                    'Like this Sentence.)')
             halp = discord.Embed(title=titl,
                                  description=desc,
                                  color=discord.Color.blurple())

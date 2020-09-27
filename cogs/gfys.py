@@ -505,6 +505,7 @@ class Fun(commands.Cog):
                             continue
                 if str(gfy) not in gfys_dict["groups"][group][idol]:
                     gfys_dict["groups"][group][idol].append(str(gfy))
+                    await self.audit_channel(group, idol, str(gfy), ctx.author)
                     i += 1
                 else:
                     d += 1
@@ -987,6 +988,17 @@ class Fun(commands.Cog):
                 await ctx.send(f"No group named `{group}`!")
         else:
             await ctx.send("Something went wrong!")
+
+# --- Auditing --- #
+
+    async def audit_channel(self, group, idol, link, author):
+        audcha = self.disclient.get_channel(759579438458339339)
+        s = (f'`{author}` added: \n'
+             f'`{group}`, `{idol}`: {link}')
+        await audcha.send(s)
+        pass
+
+# --- End of Class --- #
 
 
 def format_list(array):
