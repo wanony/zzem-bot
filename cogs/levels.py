@@ -92,10 +92,11 @@ class Levels(commands.Cog):
         for member in uz:
             memberid = await self.disclient.fetch_user(member)
             cont = uz[member]["cont"]
-            thing = {cont: str(memberid)}
+            thing = {str(memberid): cont}
             listo.update(thing)
-        p = {key: value for key, value in sorted(listo.items(),
-                                                 key=lambda item: item[1])}
+        p = {k: v for k, v in sorted(listo.items(),
+                                     key=lambda item: item[1],
+                                     reverse=True)}
         embed = discord.Embed(title="Contribution Leaderboard",
                               description="",
                               color=discord.Color.blurple())
@@ -104,7 +105,7 @@ class Levels(commands.Cog):
         for elem in p:
             elem = f"{elem} {p[elem]}"
             elem = elem.split(" ")
-            elem = f"{elem[-1]}{spacing*(29 - len(elem[-1]))}{elem[0]}"
+            elem = f"{elem[0]}{spacing*(29 - len(elem[0]))}{elem[-1]}"
             embed.add_field(name="-", value=f"`{e}. {elem}`", inline=False)
             e += 1
         await ctx.send(embed=embed)

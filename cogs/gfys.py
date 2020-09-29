@@ -996,7 +996,6 @@ class Fun(commands.Cog):
         # f'`{author}` added: \n'
         s = (f'added: `{group}`, `{idol}`: {link}')
         await audcha.send(s)
-        pass
 
 # --- End of Class --- #
 
