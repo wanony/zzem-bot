@@ -105,7 +105,8 @@ class Levels(commands.Cog):
         for elem in p:
             elem = f"{elem} {p[elem]}"
             elem = elem.split(" ")
-            elem = f"{elem[0]}{spacing*(29 - len(elem[0]))}{elem[-1]}"
+            nam = ' '.join(elem[:-1])
+            elem = f"{nam}{spacing*(29 - len(nam))}{elem[-1]}"
             embed.add_field(name="-", value=f"`{e}. {elem}`", inline=False)
             e += 1
         await ctx.send(embed=embed)
