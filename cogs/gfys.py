@@ -336,6 +336,8 @@ class Fun(commands.Cog):
                             continue
                 if str(link) not in gfys_dict["groups"][group][idol]:
                     gfys_dict["groups"][group][idol].append(str(link))
+                    auth = ctx.author
+                    await self.audit_channel(group, idol, str(link), auth)
                     await ctx.send(f"Added to `{group}`'s `{idol.title()}`!")
                 else:
                     await ctx.send("Already added!")
@@ -429,6 +431,8 @@ class Fun(commands.Cog):
                         contri_dict[author]['cont'] = 0
                     contri_dict[author]['cont'] += 1
                     gfys_dict["groups"][group][idol].append(str(link))
+                    auth = ctx.author
+                    await self.audit_channel(group, idol, str(link), auth)
                     await ctx.send(f"Added to `{group}`'s `{idol.title()}`!")
                 else:
                     await ctx.send("Already added!")

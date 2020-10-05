@@ -16,8 +16,10 @@ with open(direc_dict["levels"], 'r') as usrs:
 path_to_images = direc_dict["images"]
 cog_path = direc_dict["cogs"]
 
+# intents = discord.Intents()
+# intents.members = True
 
-disclient = commands.Bot(command_prefix='.')
+disclient = commands.Bot(command_prefix='.')  # , intents=intents)
 # for when it comes for a custom help command
 disclient.remove_command('help')
 # commands.DefaultHelpCommand(width=100, dm_help=True, dm_help_threshold=100)

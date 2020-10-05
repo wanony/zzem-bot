@@ -88,27 +88,18 @@ class Levels(commands.Cog):
         """
         with open(direc_dict["contri"]) as cont:
             uz = json.load(cont)
-        listo = {}
-        for member in uz:
-            memberid = await self.disclient.fetch_user(member)
-            cont = uz[member]["cont"]
-            thing = {str(memberid): cont}
-            listo.update(thing)
-        p = {k: v for k, v in sorted(listo.items(),
-                                     key=lambda item: item[1],
-                                     reverse=True)}
+        leads = [
+            [uz[m]["cont"],
+             await self.disclient.fetch_user(m)] for m in uz
+            ]
+        leads.sort(reverse=True)
         embed = discord.Embed(title="Contribution Leaderboard",
                               description="",
                               color=discord.Color.blurple())
-        e = 1
-        spacing = " "
-        for elem in p:
-            elem = f"{elem} {p[elem]}"
-            elem = elem.split(" ")
-            nam = ' '.join(elem[:-1])
-            elem = f"{nam}{spacing*(29 - len(nam))}{elem[-1]}"
-            embed.add_field(name="-", value=f"`{e}. {elem}`", inline=False)
-            e += 1
+        for idx, pair in enumerate(leads, start=1):
+            name = pair[1].name + '#' + pair[1].discriminator
+            elem = f"`{idx}. {name}{' ' * (29 - len(name))}{pair[0]}`"
+            embed.add_field(name="-", value=elem, inline=False)
         await ctx.send(embed=embed)
 
 
