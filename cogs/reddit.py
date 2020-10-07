@@ -36,78 +36,76 @@ class Reddits(commands.Cog):
     async def post_new(self):
         await self.disclient.wait_until_ready()
         while not self.disclient.is_closed():
-
-            async def post_to_server(channel, subreddit):
-                channel = self.disclient.get_channel(int(channel))
-                chanid = str(channel.id)
-                sub = reddit.subreddit(subreddit).new(limit=3)
-                for subm in sub:
-                    titl = subm.title
-                    if "/r/" in subm.url:
-                        url = ""
-                    else:
-                        url = subm.url
-                    auth = subm.author
-                    perm = subm.permalink
-                    fts = (".JPG", ".jpg", ".JPEG", ".jpeg", ".PNG", ".png")
-                    gifs = (
-                        "https://gfycat.com/",
-                        "https://www.redgifs.com/",
-                        "https://www.gifdeliverynetwork.com/"
-                    )
-                    lp = reddit_dict[chanid][subreddit]["last_post"]
-                    if perm in lp:
-                        pass
-                    else:
-                        soy = "https://reddit.com"
-                        lp.append(perm)
-                        if len(lp) > 5:
-                            del lp[0]
-                        desc = f"Posted by {auth} in **/r/{subreddit}**"
-                        embed = discord.Embed(title=titl,
-                                              description=desc,
-                                              color=discord.Color.blurple())
-                        if url:
-                            val = f"{soy}{perm} \n**{url}**"
-                            if url.endswith(fts) or "gallery" in url:
-                                embed.set_image(url=url)
-                                embed.add_field(name="Post Permalink",
-                                                value=val)
-                                try:
-                                    await channel.send(embed=embed)
-                                except AttributeError:
-                                    print("Channel deleted")
-                            elif url.startswith(gifs):
-                                embed.add_field(name="Post Permalink",
-                                                value=val)
-                                try:
-                                    await channel.send(embed=embed)
-                                    await channel.send(url)
-                                except AttributeError:
-                                    print("Channel deleted")
+            for channels in reddit_dict:
+                for subs in reddit_dict[channels]:
+                    channel = self.disclient.get_channel(int(channels))
+                    chanid = str(channel.id)
+                    sub = reddit.subreddit(subs).new(limit=3)
+                    for subm in sub:
+                        titl = subm.title
+                        if "/r/" in subm.url:
+                            url = ""
+                        else:
+                            url = subm.url
+                        auth = subm.author
+                        perm = subm.permalink
+                        fts = (".JPG", ".jpg", ".JPEG",
+                               ".jpeg", ".PNG", ".png")
+                        gifs = (
+                            "https://gfycat.com/",
+                            "https://www.redgifs.com/",
+                            "https://www.gifdeliverynetwork.com/"
+                        )
+                        lp = reddit_dict[chanid][subs]["last_post"]
+                        if perm in lp:
+                            pass
+                        else:
+                            soy = "https://reddit.com"
+                            lp.append(perm)
+                            if len(lp) > 5:
+                                del lp[0]
+                            desc = f"Posted by {auth} in **/r/{subs}**"
+                            clr = discord.Color.blurple()
+                            embed = discord.Embed(title=titl,
+                                                  description=desc,
+                                                  color=clr)
+                            if url:
+                                val = f"{soy}{perm} \n**{url}**"
+                                if url.endswith(fts) or "gallery" in url:
+                                    embed.set_image(url=url)
+                                    embed.add_field(name="Post Permalink",
+                                                    value=val)
+                                    try:
+                                        await channel.send(embed=embed)
+                                    except AttributeError:
+                                        print("Channel deleted")
+                                elif url.startswith(gifs):
+                                    embed.add_field(name="Post Permalink",
+                                                    value=val)
+                                    try:
+                                        await channel.send(embed=embed)
+                                        await channel.send(url)
+                                    except AttributeError:
+                                        print("Channel deleted")
+                                else:
+                                    val = f"{soy}{perm}"
+                                    embed.add_field(name="Post Permalink",
+                                                    value=val)
+                                    try:
+                                        await channel.send(embed=embed)
+                                        await channel.send(url)
+                                    except AttributeError:
+                                        print("Channel deleted")
                             else:
                                 val = f"{soy}{perm}"
                                 embed.add_field(name="Post Permalink",
                                                 value=val)
                                 try:
                                     await channel.send(embed=embed)
-                                    await channel.send(url)
                                 except AttributeError:
                                     print("Channel deleted")
-                        else:
-                            val = f"{soy}{perm}"
-                            embed.add_field(name="Post Permalink",
-                                            value=val)
-                            try:
-                                await channel.send(embed=embed)
-                            except AttributeError:
-                                print("Channel deleted")
-                await asyncio.sleep(60)
-
-            for channel in reddit_dict:
-                for subs in reddit_dict[channel]:
-                    await post_to_server(channel, subs)
-            await asyncio.sleep(180)
+                await asyncio.sleep(180)
+                print("calling reddit")
 
     @commands.command()
     async def unfollow_subreddit(self, ctx, subreddit):
