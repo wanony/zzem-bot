@@ -1,4 +1,4 @@
-# import discord
+import discord
 from discord.ext import commands
 import random
 import json
@@ -451,6 +451,18 @@ class Fun(commands.Cog):
         links = args
         if not links:
             await ctx.send("No link(s) provided!")
+        elif group not in gfys_dict["groups"]:
+            msg = f"{group} does not exist!"
+            embed = discord.Embed(title="Error",
+                                  description=msg,
+                                  color=discord.Color.red())
+            await ctx.send(embed=embed)
+        elif idol not in gfys_dict["groups"][group]:
+            msg = f"{idol} not in {group}!"
+            embed = discord.Embed(title="Error",
+                                  description=msg,
+                                  color=discord.Color.red())
+            await ctx.send(embed=embed)
         else:
             currentlink = []
             send_message = {}

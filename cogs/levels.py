@@ -96,7 +96,7 @@ class Levels(commands.Cog):
         embed = discord.Embed(title="Contribution Leaderboard",
                               description="",
                               color=discord.Color.blurple())
-        for idx, pair in enumerate(leads, start=1):
+        for idx, pair in enumerate(leads[:10], start=1):
             name = pair[1].name + '#' + pair[1].discriminator
             elem = f"`{idx}. {name}{' ' * (29 - len(name))}{pair[0]}`"
             embed.add_field(name="-", value=elem, inline=False)
