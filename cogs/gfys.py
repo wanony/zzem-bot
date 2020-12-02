@@ -460,7 +460,7 @@ class Fun(commands.Cog):
                                   color=discord.Color.red())
             await ctx.send(embed=embed)
         else:
-            currentlink = []
+            currentlink = None
             send_message = {}
             i = 0
             d = 0
@@ -470,33 +470,21 @@ class Fun(commands.Cog):
                 if gfy.startswith("https://gfycat.com/"):
                     split = gfy.split("/")
                     gfy = "https://gfycat.com/" + split[-1]
-                    try:
-                        currentlink.pop()
-                    except IndexError:
-                        print("nothing to pop")
-                    currentlink.append(gfy)
+                    currentlink = gfy
                 elif gfy.startswith("https://www.redgifs.com/"):
                     split = gfy.split("/")
                     gfy = "https://www.redgifs.com/watch/" + split[-1]
-                    try:
-                        currentlink.pop()
-                    except IndexError:
-                        print("nothing to pop")
-                    currentlink.append(gfy)
+                    currentlink = gfy
                 elif gfy.startswith("https://www.gifdeliverynetwork.com/"):
                     split = gfy.split("/")
                     gfy = "https://www.gifdeliverynetwork.com/" + split[-1]
-                    try:
-                        currentlink.pop()
-                    except IndexError:
-                        print("nothing to pop")
-                    currentlink.append(gfy)
+                    currentlink = gfy
                 else:
                     gfy = gfy.lower()
                     if gfy not in gfys_dict["tags"]:
                         updater = {str(gfy): []}
                         gfys_dict["tags"].update(updater)
-                        gfys_dict["tags"][gfy].append(str(currentlink[0]))
+                        gfys_dict["tags"][gfy].append(str(currentlink))
                         it += 1
                         if gfy not in send_message:
                             send_message.update({gfy: 1})
@@ -504,8 +492,8 @@ class Fun(commands.Cog):
                             send_message[gfy] += 1
                         continue
                     else:
-                        if str(currentlink[0]) not in gfys_dict["tags"][gfy]:
-                            gfys_dict["tags"][gfy].append(str(currentlink[0]))
+                        if currentlink and currentlink not in gfys_dict["tags"][gfy]:
+                            gfys_dict["tags"][gfy].append(currentlink)
                             it += 1
                             if gfy not in send_message:
                                 send_message.update({gfy: 1})
@@ -1004,7 +992,7 @@ class Fun(commands.Cog):
 # --- Auditing --- #
 
     async def audit_channel(self, group, idol, link, author):
-        audcha = self.disclient.get_channel(759579438458339339)
+        audcha = self.disclient.get_channel(783763824637378560)
         # f'`{author}` added: \n'
         s = (f'added: `{group}`, `{idol}`: {link}')
         await audcha.send(s)
