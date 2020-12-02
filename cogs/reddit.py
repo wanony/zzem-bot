@@ -104,8 +104,8 @@ class Reddits(commands.Cog):
                                     await channel.send(embed=embed)
                                 except AttributeError:
                                     print("Channel deleted")
-                await asyncio.sleep(180)
-                print("calling reddit")
+            await asyncio.sleep(180)
+            print("calling reddit")
 
     @commands.command()
     async def unfollow_subreddit(self, ctx, subreddit):
