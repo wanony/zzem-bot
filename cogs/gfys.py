@@ -492,7 +492,9 @@ class Fun(commands.Cog):
                             send_message[gfy] += 1
                         continue
                     else:
-                        if currentlink and currentlink not in gfys_dict["tags"][gfy]:
+                        if not currentlink:
+                            continue
+                        elif currentlink not in gfys_dict["tags"][gfy]:
                             gfys_dict["tags"][gfy].append(currentlink)
                             it += 1
                             if gfy not in send_message:
