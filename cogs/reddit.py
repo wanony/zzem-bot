@@ -3,13 +3,9 @@ import json
 import praw
 from discord.ext import commands
 import asyncio
-
-with open('directories.json') as direc:
-    direc_dict = json.load(direc)
-with open(direc_dict["apis"], 'r') as apis:
-    apis_dict = json.load(apis)
-with open(direc_dict["reddit"], 'r') as redd:
-    reddit_dict = json.load(redd)
+from data import direc_dict
+from data import apis_dict
+from data import reddit_dict
 
 reddit = praw.Reddit(client_id=apis_dict["reddit_id"],
                      client_secret=apis_dict["reddit_secret"],
@@ -104,8 +100,8 @@ class Reddits(commands.Cog):
                                     await channel.send(embed=embed)
                                 except AttributeError:
                                     print("Channel deleted")
-                await asyncio.sleep(180)
-                print("calling reddit")
+            await asyncio.sleep(180)
+            print("calling reddit")
 
     @commands.command()
     async def unfollow_subreddit(self, ctx, subreddit):

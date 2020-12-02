@@ -3,14 +3,10 @@ from discord.ext import commands
 import random
 import json
 import asyncio
-with open('directories.json') as direc:
-    direc_dict = json.load(direc)
-with open(direc_dict["gfys"], 'r') as gfys:
-    gfys_dict = json.load(gfys)
-with open(direc_dict["recents"], 'r') as rece:
-    recent_dict = json.load(rece)
-with open(direc_dict["contri"], 'r') as cont:
-    contri_dict = json.load(cont)
+from data import direc_dict
+from data import gfys_dict
+from data import recent_dict
+from data import contri_dict
 
 
 class Fun(commands.Cog):

@@ -1,10 +1,6 @@
 # import discord
 from discord.ext import commands
-import json
-with open('directories.json') as direc:
-    direc_dict = json.load(direc)
-with open(direc_dict["custom"], 'r') as cus:
-    custom_dict = json.load(cus)
+from data import custom_dict
 
 
 class Events(commands.Cog):
@@ -22,8 +18,6 @@ class Events(commands.Cog):
         # user = message.author
         msg = message.content.split(" ")
         if msg[0].startswith("."):
-            with open(direc_dict["custom"], 'r') as cus:
-                custom_dict = json.load(cus)
             command = msg[0].replace(".", "")
             print(command)
             if command in custom_dict["command_list"]:
