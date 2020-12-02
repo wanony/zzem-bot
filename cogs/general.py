@@ -1,12 +1,6 @@
 import discord
-import json
 from discord.ext import commands
-with open('directories.json') as direc:
-    direc_dict = json.load(direc)
-with open(direc_dict["levels"], 'r') as usrs:
-    users = json.load(usrs)
-path_to_images = direc_dict["images"]
-cog_path = direc_dict["cogs"]
+from data import users
 
 
 class General(commands.Cog):

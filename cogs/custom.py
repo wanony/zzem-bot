@@ -2,12 +2,8 @@
 from discord.ext import commands
 import json
 import asyncio
-with open('directories.json') as direc:
-    direc_dict = json.load(direc)
-with open(direc_dict["apis"], 'r') as apis:
-    json_dict = json.load(apis)
-with open(direc_dict["custom"], 'r') as cus:
-    custom_dict = json.load(cus)
+from data import direc_dict
+from data import custom_dict
 
 
 class Custom(commands.Cog):

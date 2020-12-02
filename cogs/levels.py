@@ -2,17 +2,8 @@ import discord
 from discord.ext import commands
 import json
 import asyncio
-with open('directories.json') as direc:
-    direc_dict = json.load(direc)
-with open(direc_dict["apis"], 'r') as apis:
-    json_dict = json.load(apis)
-with open(direc_dict["custom"], 'r') as cus:
-    custom_dict = json.load(cus)
-with open(direc_dict["gfys"], 'r') as gfys:
-    gfys_dict = json.load(gfys)
-with open(direc_dict["levels"], 'r') as usrs:
-    users = json.load(usrs)
-path_to_images = direc_dict["images"]
+from data import direc_dict
+from data import users
 
 
 class Levels(commands.Cog):
