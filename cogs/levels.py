@@ -77,11 +77,9 @@ class Levels(commands.Cog):
         This leaderboard is made from all contributers across
         every server the bot is connected to.
         """
-        with open(direc_dict["contri"]) as cont:
-            uz = json.load(cont)
         leads = [
-            [uz[m]["cont"],
-             await self.disclient.fetch_user(m)] for m in uz
+            [users[m]["cont"],
+             await self.disclient.fetch_user(m)] for m in users
             ]
         leads.sort(reverse=True)
         embed = discord.Embed(title="Contribution Leaderboard",
