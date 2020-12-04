@@ -10,75 +10,81 @@ class General(commands.Cog):
     def __init__(self, disclient):
         self.disclient = disclient
 
-    # Shamelessly stolen from Jared Newsom (AKA Jared M.F.)
-    # https://gist.github.com/StudioMFTechnologies/ad41bfd32b2379ccffe90b0e34128b8b
-    # Refactored into flake8 linting
     @commands.command(pass_context=True)
     @commands.has_permissions(add_reactions=True, embed_links=True)
-    async def help(self, ctx, *cog):
+    async def help(self, ctx, *args):
         """Gets all categories and commands of the bot."""
-        # cogs can just be .lower() and cog.title()
-        # accepting commands can also be done
-        if not cog:
+        if not args:
             titl = 'Category List'
-            desc = ('Use `.help <Category>` to find out more about them! \n'
-                    '(BTW, the Category Name Must Be in Title Case, Just '
-                    'Like this Sentence.)')
+            desc = 'Use `.help <Category>` to find out more about them! \n'
             halp = discord.Embed(title=titl,
                                  description=desc,
                                  color=discord.Color.blurple())
-            cogs_desc = ''
-            for x in self.disclient.cogs:
-                docu = self.disclient.cogs[x].__doc__
-                x = f"`{x}`"
-                cogs_desc += ('{} - {}'.format(x, docu)+'\n')
+            cogs_desc = "\n".join(
+                [f'`{name}` - {cog.__doc__}'
+                 for name, cog in self.disclient.cogs.items()]
+            )
             halp.add_field(name='Categories',
-                           value=cogs_desc[0:len(cogs_desc)-1],
+                           value=cogs_desc,
                            inline=False)
-            cmds_desc = ''
-            for y in self.disclient.walk_commands():
-                if not y.cog_name and not y.hidden:
-                    cmds_desc += ('{} - {}'.format(y.name, y.help) + '\n')
-            # removed as no commands are uncategorised
-            # halp.add_field(name='Uncatergorized Commands',
-            #                value=cmds_desc[0:len(cmds_desc)-1],
-            #                inline=False)
+            cmds_desc = "\n".join(
+                [f'`{y.name}` - {y.help}'
+                 for y in self.disclient.walk_commands()
+                 if not y.cog_name and not y.hidden]
+            )
+            if len(cmds_desc) > 0:
+                halp.add_field(name='Uncatergorized Commands',
+                               value=cmds_desc,
+                               inline=False)
             await ctx.message.add_reaction(emoji='✉')
             await ctx.message.author.send(embed=halp)
         else:
-            # can allow for multiple cogs
-            if len(cog) > 1:
+            # Don't process dumb amounts of input
+            if len(args) > 5:
+                errr = f"Too many categories given!"
                 halp = discord.Embed(title='Error!',
-                                     description='Too many cogs!',
+                                     description=errr,
                                      color=discord.Color.red())
+                await ctx.message.add_reaction(emoji='✉')
                 await ctx.message.author.send(embed=halp)
-            else:
-                found = False
-                for x in self.disclient.cogs:
-                    # why is this a loop in a loop?
-                    # need to rewrite here to allow for information on
-                    # just commands and to not use shitty loops
-                    for y in cog:
-                        if x == y:
-                            titl = f"{cog[0]} Command List"
-                            desc = self.disclient.cogs[cog[0]].__doc__
-                            halp = discord.Embed(title=titl,
-                                                 description=desc,
-                                                 color=discord.Color.blurple())
-                            cmnd = self.disclient.get_cog(y).get_commands()
-                            for c in cmnd:
-                                if not c.hidden:
-                                    halp.add_field(name=c.name,
-                                                   value=c.help,
-                                                   inline=False)
-                            found = True
-                if not found:
-                    errr = f'Cog {cog[0]} not found!'
-                    halp = discord.Embed(title='Error!',
-                                         description=errr,
-                                         color=discord.Color.red())
+                return
+
+            for arg in set(args):
+                # Check standard capitalized format first
+                cog = None
+                if arg.capitalize() in self.disclient.cogs:
+                    cog = self.disclient.cogs[arg.capitalize()]
+                elif arg in self.disclient.cogs:
+                    # Attempt to use raw input on fallback
+                    cog = self.disclient.cogs[arg]
+
+                if cog is None:
+                    # Check if it is a command
+                    command = None
+                    for c in self.disclient.walk_commands():
+                        if arg.lower() == c.name.lower():
+                            command = c
+
+                    if command:
+                        halp = discord.Embed(title=command.name,
+                                             description=command.help,
+                                             color=discord.Color.blurple())
+                    else:
+                        errr = f"Category '{arg}' not found!"
+                        halp = discord.Embed(title='Error!',
+                                             description=errr,
+                                             color=discord.Color.red())
                 else:
-                    await ctx.message.add_reaction(emoji='✉')
+                    titl = f"{arg} Command List"
+                    halp = discord.Embed(title=titl,
+                                         description=cog.__doc__,
+                                         color=discord.Color.blurple())
+                    for c in cog.get_commands():
+                        if not c.hidden:
+                            halp.add_field(name=c.name,
+                                           value=c.help,
+                                           inline=False)
+                await ctx.message.add_reaction(emoji='✉')
                 await ctx.message.author.send(embed=halp)
 
     @commands.command(aliases=['avatar'])
