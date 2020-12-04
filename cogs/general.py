@@ -12,9 +12,9 @@ class General(commands.Cog):
 
     @commands.command(pass_context=True)
     @commands.has_permissions(add_reactions=True, embed_links=True)
-    async def help(self, ctx, *cogs):
+    async def help(self, ctx, *args):
         """Gets all categories and commands of the bot."""
-        if not cogs:
+        if not args:
             titl = 'Category List'
             desc = 'Use `.help <Category>` to find out more about them! \n'
             halp = discord.Embed(title=titl,
@@ -40,7 +40,7 @@ class General(commands.Cog):
             await ctx.message.author.send(embed=halp)
         else:
             # Don't process dumb amounts of input
-            if len(cogs) > 5:
+            if len(args) > 5:
                 errr = f"Too many categories given!"
                 halp = discord.Embed(title='Error!',
                                      description=errr,
@@ -49,22 +49,33 @@ class General(commands.Cog):
                 await ctx.message.author.send(embed=halp)
                 return
 
-            for cog_name in set(cogs):
+            for arg in set(args):
                 # Check standard capitalized format first
                 cog = None
-                if cog_name.capitalize() in self.disclient.cogs:
-                    cog = self.disclient.cogs[cog_name.capitalize()]
-                elif cog_name in self.disclient.cogs:
+                if arg.capitalize() in self.disclient.cogs:
+                    cog = self.disclient.cogs[arg.capitalize()]
+                elif arg in self.disclient.cogs:
                     # Attempt to use raw input on fallback
-                    cog = self.disclient.cogs[cog_name]
+                    cog = self.disclient.cogs[arg]
 
                 if cog is None:
-                    errr = f"Category '{cog_name}' not found!"
-                    halp = discord.Embed(title='Error!',
-                                         description=errr,
-                                         color=discord.Color.red())
+                    # Check if it is a command
+                    command = None
+                    for c in self.disclient.walk_commands():
+                        if arg.lower() == c.name.lower():
+                            command = c
+
+                    if command:
+                        halp = discord.Embed(title=command.name,
+                                             description=command.help,
+                                             color=discord.Color.blurple())
+                    else:
+                        errr = f"Category '{arg}' not found!"
+                        halp = discord.Embed(title='Error!',
+                                             description=errr,
+                                             color=discord.Color.red())
                 else:
-                    titl = f"{cog_name} Command List"
+                    titl = f"{arg} Command List"
                     halp = discord.Embed(title=titl,
                                          description=cog.__doc__,
                                          color=discord.Color.blurple())
