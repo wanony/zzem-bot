@@ -7,3 +7,4 @@ directories.json
 test.py
 .git
 .idea
+__pycache__/
