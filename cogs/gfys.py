@@ -991,6 +991,17 @@ class Fun(commands.Cog):
         else:
             await ctx.send("Something went wrong!")
 
+    @commands.command()
+    async def totallinks(self, ctx):
+        group_count = len(gfys_dict["groups"])
+        member_count = sum([len(x) for x in gfys_dict["groups"].values()])
+        member_list = [y.values() for y in gfys_dict["groups"].values()]
+        flat_member_list = [g for c in member_list for g in c]
+        count = sum([len(x) for x in flat_member_list])
+        await ctx.send(f"There are currently `{count}` links of "
+                       f"`{member_count}` members belonging to "
+                       f"`{group_count}` groups!")
+
 # --- Auditing --- #
 
     async def audit_channel(self, group, idol, link, author):
