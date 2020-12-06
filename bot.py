@@ -7,11 +7,12 @@ from discord.ext import commands
 from data import direc_dict
 from data import apis_dict
 from data import cnx
+from data import command_prefix
 
 # intents = discord.Intents()
 # intents.members = True
 
-disclient = commands.Bot(command_prefix='.')  # , intents=intents)
+disclient = commands.Bot(command_prefix=command_prefix)  # , intents=intents)
 # for when it comes for a custom help command
 disclient.remove_command('help')
 # commands.DefaultHelpCommand(width=100, dm_help=True, dm_help_threshold=100)
