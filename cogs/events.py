@@ -1,6 +1,7 @@
 # import discord
 from discord.ext import commands
-from data import custom_dict
+from data import GetCommands
+from data import command_prefix
 
 
 class Events(commands.Cog):
@@ -17,11 +18,11 @@ class Events(commands.Cog):
             return
         # user = message.author
         msg = message.content.split(" ")
-            print(command)
-            if command in custom_dict["command_list"]:
-                await message.channel.send(custom_dict["commands"][command])
         if msg[0].startswith(command_prefix):
             command = msg[0].replace(command_prefix, "")
+            command_list = GetCommands()
+            if command in command_list:
+                await message.channel.send(command_list[command])
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
