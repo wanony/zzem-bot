@@ -17,11 +17,11 @@ class Events(commands.Cog):
             return
         # user = message.author
         msg = message.content.split(" ")
-        if msg[0].startswith("."):
-            command = msg[0].replace(".", "")
             print(command)
             if command in custom_dict["command_list"]:
                 await message.channel.send(custom_dict["commands"][command])
+        if msg[0].startswith(command_prefix):
+            command = msg[0].replace(command_prefix, "")
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):

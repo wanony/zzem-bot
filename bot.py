@@ -6,6 +6,7 @@ import os
 from discord.ext import commands
 from data import direc_dict
 from data import apis_dict
+from data import cnx
 
 # intents = discord.Intents()
 # intents.members = True
@@ -50,3 +51,5 @@ except OSError:
 backup_gfy_file()
 backup_users_file()
 disclient.run(apis_dict["discord_token"])
+if cnx:
+    cnx.close()

@@ -4,6 +4,7 @@ with open('directories.json') as direc:
     direc_dict = json.load(direc)
 with open(direc_dict["apis"], 'r') as apis:
     apis_dict = json.load(apis)
+command_prefix = apis_dict["command_prefix"]
 with open(direc_dict["gfys"], 'r') as gfys:
     gfys_dict = json.load(gfys)
 with open(direc_dict["levels"], 'r') as usrs:
