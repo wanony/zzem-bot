@@ -56,14 +56,6 @@ CREATE TABLE Link_Members(
   FOREIGN KEY (MemberId) REFERENCES Members(MemberId)
 );
 
-CREATE TABLE Link_Groupz(
-  LinkId INT NOT NULL,
-  GroupId INT NOT NULL,
-  PRIMARY KEY (LinkId, GroupId),
-  FOREIGN KEY (LinkId) REFERENCES Links(LinkId),
-  FOREIGN KEY (GroupId) REFERENCES Groupz(GroupId)
-);
-
 CREATE TABLE CustomCommands(
    CommandName VARCHAR(255) CHARACTER SET utf32,
    Command VARCHAR(255) CHARACTER SET utf32,
