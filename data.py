@@ -43,7 +43,9 @@ def GetCommands():
     cursor = cnx.cursor()
     sql = "SELECT CommandName, Command FROM CustomCommands"
     cursor.execute(sql)
-    return dict(cursor.fetchall())
+    result = dict(cursor.fetchall())
+    cursor.close()
+    return result
 
 
 def RemoveCommand(name):
