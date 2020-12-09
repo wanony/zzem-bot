@@ -9,12 +9,12 @@ from data import apis_dict
 from data import cnx
 from data import command_prefix
 
-# intents = discord.Intents()
-# intents.members = True
+intents = discord.Intents.default()
+intents.members = True
 
 disclient = commands.Bot(
+    intents=intents,
     command_prefix=command_prefix,
-    member_cache_flags=discord.MemberCacheFlags.none()
 )  # , intents=intents)
 # for when it comes for a custom help command
 disclient.remove_command('help')
@@ -46,7 +46,7 @@ try:
                 cog = f"cogs.{cog.replace('.py', '')}"
                 disclient.load_extension(cog)
                 print(cog)
-            except Exception:
+            except commands.ExtensionNotLoaded:
                 print(f"Failed to load {cog}")
 except OSError:
     print("No cogs to load!")

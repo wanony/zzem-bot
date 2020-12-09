@@ -541,8 +541,6 @@ class Fun(commands.Cog):
         This can be invoked with tags following <idol>
         Example .gfy <group> <idol> <tag> <tag>
         """
-        with open(direc_dict["gfys"], 'r') as gfys:
-            gfys_dict = json.load(gfys)
         grp = group.lower()
         idl = idol.lower()
         if tags:
@@ -604,9 +602,6 @@ class Fun(commands.Cog):
     @commands.command(aliases=['r'])
     async def random(self, ctx):
         """Returns a random link, luck of the draw!"""
-        with open(direc_dict["gfys"], 'r') as gfys:
-            gfys_dict = json.load(gfys)
-
         async def random_recur():
             grp = random.choice(list(gfys_dict["groups"].keys()))
             idl = random.choice(list(gfys_dict["groups"][grp].keys()))
@@ -696,8 +691,6 @@ class Fun(commands.Cog):
         Sends a random gfy with the specified tag
         Example: .tagged <tag>
         """
-        with open(direc_dict["gfys"], 'r') as gfys:
-            gfys_dict = json.load(gfys)
         tag = tag.lower()
         if tag in gfys_dict["tags"]:
             if tag not in recent_dict:
@@ -721,8 +714,6 @@ class Fun(commands.Cog):
         Sends a random image with the specified tag
         Example: .taggedimage <tag>
         """
-        with open(direc_dict["gfys"], 'r') as gfys:
-            gfys_dict = json.load(gfys)
         tag = tag.lower()
         if tag in gfys_dict["tags"]:
             can_send = []
@@ -750,8 +741,6 @@ class Fun(commands.Cog):
         Sends a random gfy with the specified tag
         Example: .taggedgfy <tag>
         """
-        with open(direc_dict["gfys"], 'r') as gfys:
-            gfys_dict = json.load(gfys)
         tag = tag.lower()
         if tag in gfys_dict["tags"]:
             can_send = []
@@ -778,8 +767,6 @@ class Fun(commands.Cog):
     @commands.command(aliases=['tf'])
     async def taggedfancam(self, ctx, tag):
         """Sends a random fancam with the specified tag"""
-        with open(direc_dict["gfys"], 'r') as gfys:
-            gfys_dict = json.load(gfys)
         tag = tag.lower()
         if tag in gfys_dict["tags"]:
             can_send = []
@@ -892,11 +879,15 @@ class Fun(commands.Cog):
                 await asyncio.sleep(interval)
 
     @commands.command(aliases=['stop'])
-    async def stop_timer(self, ctx, timer_number=1):
+    async def stop_timer(self, ctx, timer_number=None):
         """
         Stops the timer function by user, if you have
         multiple timers running, specify the timer number.
         """
+        if timer_number:
+            pass
+        else:
+            timer_number = 1
         author = str(ctx.author)
         checklist = []
         for keys in self.loops:
@@ -1006,8 +997,7 @@ class Fun(commands.Cog):
 
     async def audit_channel(self, group, idol, link, author):
         audcha = self.disclient.get_channel(783763824637378560)
-        # f'`{author}` added: \n'
-        s = (f'added: `{group}`, `{idol}`: {link}')
+        s = f'{author} added: `{group}`, `{idol}`: {link}'
         await audcha.send(s)
 
 # --- End of Class --- #

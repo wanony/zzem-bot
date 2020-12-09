@@ -99,7 +99,7 @@ class General(commands.Cog):
         # embed.set_thumbnail(url=member.avatar_url)
         embed.set_footer(text=f"requested by {ctx.author}",
                          icon_url=ctx.author.avatar_url)
-        embed.set_image(url=member.avatar_url_as(static_format='png', size=256))
+        embed.set_image(url=member.avatar_url_as(size=512))
         await ctx.send(embed=embed)
 
     @commands.command(aliases=['profile'])
